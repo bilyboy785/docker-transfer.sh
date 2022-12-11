@@ -1,6 +1,4 @@
-# Default to Go 1.17
-ARG GO_VERSION=1.17
-FROM golang:${GO_VERSION}-alpine as build
+FROM golang:1.19-alpine3.17 as build
 
 # Necessary to run 'go get' and to compile the linked binary
 RUN apk add git musl-dev
@@ -26,7 +24,7 @@ RUN mkdir -p /tmp/useradd /tmp/empty && \
     echo "${RUNAS}:!::" >> /tmp/useradd/groupshadow; else touch /tmp/useradd/unused; fi
 
 FROM scratch AS final
-LABEL maintainer="Andrea Spacca <andrea.spacca@gmail.com>"
+LABEL maintainer="Martin Bouillaud <contact@bouillaudmartin.fr"
 ARG RUNAS
 
 COPY --from=build /tmp/empty /tmp
