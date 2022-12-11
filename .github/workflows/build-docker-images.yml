@@ -1,14 +1,10 @@
 name: deploy multi-architecture Docker images for transfer.sh with buildx
 
 on:
-  schedule:
-    - cron: '0 0 * * *' # everyday at midnight UTC
-  pull_request:
-    branches: main
+  # schedule:
+  #   - cron: '0 0 * * *' # everyday at midnight UTC
   push:
-    branches: main
-    tags:
-      - v*
+    tags: [ '*' ]
 
 jobs:
   buildx:
@@ -21,7 +17,7 @@ jobs:
         name: Prepare
         id: prepare
         run: |
-          DOCKER_IMAGE=dutchcoders/transfer.sh
+          DOCKER_IMAGE=martinbouillaud/transfersh
           DOCKER_PLATFORMS=linux/amd64,linux/arm/v7,linux/arm64,linux/386
           VERSION=edge
 
