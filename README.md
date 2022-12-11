@@ -1,4 +1,5 @@
-# transfer.sh [![Go Report Card](https://goreportcard.com/badge/github.com/dutchcoders/transfer.sh)](https://goreportcard.com/report/github.com/dutchcoders/transfer.sh) [![Docker pulls](https://img.shields.io/docker/pulls/dutchcoders/transfer.sh.svg)](https://hub.docker.com/r/dutchcoders/transfer.sh/) [![Build Status](https://github.com/dutchcoders/transfer.sh/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/dutchcoders/transfer.sh/actions/workflows/test.yml?query=branch%3Amain)
+# transfer.sh 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)  [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://docker.com/) [![Docker Pulls](https://badgen.net/docker/pulls/martinbouillaud/transfersh?icon=docker&label=pulls)](https://hub.docker.com/r/martinbouillaud/transfersh:latest)  [![Docker Image Size](https://img.shields.io/docker/image-size/martinbouillaud/transfersh?sort=date)](https://hub.docker.com/r/martinbouillaud/transfersh/) [![Github last-commit](https://img.shields.io/github/last-commit/bilyboy785/docker-transfer.sh)](https://github.com/bilyboy785/docker-transfer.sh) ![Push to Docker Hub](https://github.com/bilyboy785/docker-transfer.sh/actions/workflows/build-docker-images.yml/badge.svg)
 
 Easy and fast file sharing from the command-line. This code contains the server with everything you need to create your own instance.
 
@@ -56,6 +57,52 @@ The URL used to request the deletion of a file and returned as a response header
 curl -sD - --upload-file ./hello.txt https://transfer.sh/hello.txt | grep -i -E 'transfer\.sh|x-url-delete'
 x-url-delete: https://transfer.sh/hello.txt/BAYh0/hello.txt/PDw0NHPcqU
 https://transfer.sh/hello.txt/BAYh0/hello.txt
+```
+## Docker usage
+### Basic Usage
+
+```
+docker run -d --restart always --name transfersh -p 8080:8080 -e PROVIDER=local -e BASEDIR=/var/uploads -e MAX_UPLOAD_SIZE=1000000 -e LISTENER=8080 -v ./uploads:/var/uploads martinbouillaud/transfersh
+```
+
+### Docker Compose
+```
+version: '3'
+services:
+  transfersh:
+    container_name: transfersh
+    image: martinbouillaud/transfersh:latest
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - $PWD/uploads:/var/uploads
+      - $PWD/temp:/var/temp
+    environment:
+      - LISTENER=8080
+      - MAX_UPLOAD_SIZE=1000000 # 1Go
+      - BASEDIR=/var/uploads
+      - PROVIDER=local
+      - TEMP_PATH=/var/temp
+```
+
+### Environment Variables
+| Env  | Value          | Description |
+| :---------------: |:---------------:| :-----:|
+| PROVIDER  |   s3 - storj - gdrive - local       |  Storage provider to use |
+| LISTENER  |  80       |  Port to use for HTTP |
+| TEMP_PATH  |         |  Full path to Temporary folder (Optional) |
+| BASEDIR  |         |  Full path to data storage  |
+| MAX_UPLOAD_SIZE  |         |  Max upload size in kilobytes (Optional)   |
+| EMAIL_CONTACT  |         |  Email contact for the front end (Optional)   |
+| LOG  |         |  Full path to log file (Optional)   |
+| PURGE_DAYS  |         |  Number of days after uploads are purged automatically (Optional)   |
+| PURGE_INTERVAL  |         |  Interval in hours to run the automatic purge (no applicable to S3 and Storj) (Optional)   |
+
+### Utilisation
+
+```
+curl --progress-bar --upload-file "./test.png" http://127.0.0.1:8080/test -H "Max-Downloads: 5" -H "Max-Days: 1"
 ```
 
 ## Examples
