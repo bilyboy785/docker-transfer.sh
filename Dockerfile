@@ -1,3 +1,5 @@
+# transfersh 1.4.0 on Golang 1.19-alpine3.17
+
 FROM golang:1.19-alpine3.17 as build
 
 # Necessary to run 'go get' and to compile the linked binary
