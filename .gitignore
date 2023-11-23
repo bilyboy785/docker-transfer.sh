@@ -22,3 +22,5 @@ transfersh-server/run.sh
 !.elasticbeanstalk/*.global.yml
 
 !.github/build/
+
+.github/build/
